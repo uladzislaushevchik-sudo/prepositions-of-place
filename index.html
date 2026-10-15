@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1B5E20">
-<title>Предлоги места · Practice</title>
+<title>Предлоги места</title>
 <style>
 :root{--p:#1B5E20;--s:#2e7d32;--e:#c62828;--bg:#f4f7f4;--c:#fff;--t:#1a1a1a;--m:#666;--b:#d5e0d5}
 [data-theme=dark]{--p:#81C784;--s:#66bb6a;--e:#ef5350;--bg:#121a12;--c:#1a241a;--t:#e8ede8;--m:#9aaa9a;--b:#2a3a2a}
@@ -12,7 +12,6 @@
 button{font-family:inherit;cursor:pointer;color:inherit}
 body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--t);line-height:1.45;padding-bottom:60px}
 header{background:linear-gradient(135deg,#1B5E20,#388E3C);color:#fff;padding:14px;text-align:center;position:sticky;top:0;z-index:20}
-header h1{font-size:1.2rem}header p{opacity:.9;font-size:.78rem}
 .tabs{display:flex;flex-wrap:wrap;gap:5px;padding:9px;justify-content:center}
 .tab{padding:7px 10px;border:2px solid var(--b);border-radius:18px;background:var(--c);font-size:.74rem;font-weight:600;color:var(--p)}
 .tab.active{background:var(--p);color:#fff;border-color:var(--p)}
@@ -20,7 +19,6 @@ header h1{font-size:1.2rem}header p{opacity:.9;font-size:.78rem}
 .card{background:var(--c);border-radius:12px;padding:13px;margin-bottom:11px;border:1px solid var(--b)}
 .card h2{font-size:.98rem;color:var(--p);margin-bottom:6px}
 .rule{padding:10px;border-radius:8px;margin-bottom:7px;border-left:5px solid;font-size:.85rem;background:var(--bg)}
-.rule b{display:block;margin-bottom:2px}.ex{font-style:italic;color:var(--m);font-size:.78rem}
 .q{font-weight:600;margin-bottom:6px;font-size:.9rem}
 .opts{display:flex;flex-direction:column;gap:5px}
 .opt{padding:10px;border:2px solid var(--b);border-radius:8px;background:var(--c);text-align:left;font-size:.86rem}
@@ -45,9 +43,22 @@ header h1{font-size:1.2rem}header p{opacity:.9;font-size:.78rem}
 <body>
 <header>
   <h1>Предлоги места</h1>
-  <p>in · on · at · under · between · in front of · …</p>
+  <p style="opacity:.9;font-size:.78rem">in · on · at · under · between · …</p>
   <button type="button" style="margin-top:8px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 12px;border-radius:16px;font-size:.75rem" onclick="(function(d){d.setAttribute('data-theme',d.getAttribute('data-theme')==='dark'?'':'dark')})(document.documentElement)">🌓 Тема</button>
 </header>
+<div id="progressBar" style="max-width:720px;margin:8px auto;padding:0 11px">
+  <div class="card" style="padding:10px 13px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+    <div style="font-size:.82rem"><b>Прогресс</b>: <span id="progSummary">ещё нет попыток</span></div>
+    <div style="display:flex;gap:6px">
+      <button type="button" class="btn sec" style="margin:0;font-size:.75rem;padding:6px 10px" onclick="showHistory()">📜 История</button>
+      <button type="button" class="btn sec" style="margin:0;font-size:.75rem;padding:6px 10px" onclick="resetProgress()">🗑 Сброс</button>
+    </div>
+  </div>
+  <div id="histBox" style="display:none" class="card">
+    <h2 style="font-size:.9rem">История</h2>
+    <div id="histList" style="font-size:.8rem;max-height:200px;overflow:auto"></div>
+  </div>
+</div>
 <div class="tabs">
   <button class="tab active" data-t="rules" onclick="go('rules')">📖 Правила</button>
   <button class="tab" data-t="choice" onclick="go('choice')">✅ Выбор</button>
@@ -56,71 +67,58 @@ header h1{font-size:1.2rem}header p{opacity:.9;font-size:.78rem}
   <button class="tab" data-t="fix" onclick="go('fix')">🔍 Ошибки</button>
   <button class="tab" data-t="mix" onclick="go('mix')">🎯 Микс</button>
 </div>
-
 <div class="sec active" id="rules">
   <div class="card">
-    <h2>Базовые: in / on / at</h2>
-    <div class="rule" style="border-color:#1976d2"><b>IN</b> внутри<br><span class="ex">in the box, in London, in the kitchen, in a car</span></div>
-    <div class="rule" style="border-color:#388e3c"><b>ON</b> на поверхности<br><span class="ex">on the table, on the wall, on the second floor, on the bus</span></div>
-    <div class="rule" style="border-color:#f57c00"><b>AT</b> точка / место<br><span class="ex">at the door, at the station, at home, at work</span></div>
-  </div>
-  <div class="card">
-    <h2>Положение</h2>
+    <div class="rule" style="border-color:#1976d2"><b>IN</b> внутри · in the box, in London, in the kitchen</div>
+    <div class="rule" style="border-color:#388e3c"><b>ON</b> на поверхности · on the table, on the wall, on the second floor</div>
+    <div class="rule" style="border-color:#f57c00"><b>AT</b> точка · at the station, at home, at the door</div>
     <div class="grid2">
-      <div class="rule" style="border-color:#5c6bc0"><b>under</b> — под</div>
-      <div class="rule" style="border-color:#5c6bc0"><b>above / over</b> — над</div>
-      <div class="rule" style="border-color:#00897b"><b>next to / beside</b> — рядом</div>
-      <div class="rule" style="border-color:#00897b"><b>near / by</b> — недалеко</div>
-      <div class="rule" style="border-color:#6a1b9a"><b>between</b> — между (2)</div>
-      <div class="rule" style="border-color:#6a1b9a"><b>among</b> — среди (3+)</div>
-      <div class="rule" style="border-color:#c62828"><b>in front of</b> — перед</div>
-      <div class="rule" style="border-color:#c62828"><b>behind</b> — за</div>
-      <div class="rule" style="border-color:#ef6c00"><b>opposite</b> — напротив</div>
-      <div class="rule" style="border-color:#ef6c00"><b>inside / outside</b></div>
+      <div class="rule" style="border-color:#5c6bc0"><b>under / above / over</b></div>
+      <div class="rule" style="border-color:#00897b"><b>next to / near / by</b></div>
+      <div class="rule" style="border-color:#6a1b9a"><b>between (2) / among (3+)</b></div>
+      <div class="rule" style="border-color:#c62828"><b>in front of / behind / opposite</b></div>
     </div>
-    <div class="rule" style="border-color:#455a64;margin-top:8px">
-      <b>Нюансы:</b> at home / at work · on the left · in the corner (комната) · at the corner (улица) · above ≠ over
-    </div>
+    <div class="rule" style="border-color:#455a64"><b>Нюансы:</b> at home · in the corner / at the corner · on the left</div>
   </div>
 </div>
-
-<div class="sec" id="choice"><div class="card"><h2>Выбери правильный предлог</h2><p class="hint">Варианты перемешаны</p><div id="cList"></div><div class="score" id="cScore">0 / 0</div><button class="btn sec" onclick="renderC()">Сбросить</button></div></div>
-<div class="sec" id="fill"><div class="card"><h2>Вставь предлог</h2><p class="hint">Маленькими буквами. Фразы: in front of, next to…</p><div id="fList"></div><button class="btn" onclick="checkF()">Проверить</button><button class="btn sec" onclick="renderF()">Сбросить</button><div class="score" id="fScore">0 / 0</div></div></div>
-<div class="sec" id="match"><div class="card"><h2>Соедини</h2><p class="hint">Нажми слева, потом справа</p><div class="match"><div id="mLeft"></div><div id="mRight"></div></div><div class="score" id="mScore">0 / 0</div><button class="btn sec" onclick="renderMatch()">Перемешать</button></div></div>
-<div class="sec" id="fix"><div class="card"><h2>Найди правильный вариант</h2><div id="eList"></div><div class="score" id="eScore">0 / 0</div><button class="btn sec" onclick="renderE()">Сбросить</button></div></div>
+<div class="sec" id="choice"><div class="card"><h2>Выбор</h2><div id="cList"></div><div class="score" id="cScore">0 / 0</div><button class="btn sec" onclick="renderC()">Сбросить</button></div></div>
+<div class="sec" id="fill"><div class="card"><h2>Пропуски</h2><div id="fList"></div><button class="btn" onclick="checkF()">Проверить</button><button class="btn sec" onclick="renderF()">Сбросить</button><div class="score" id="fScore">0 / 0</div></div></div>
+<div class="sec" id="match"><div class="card"><h2>Соедини</h2><div class="match"><div id="mLeft"></div><div id="mRight"></div></div><div class="score" id="mScore">0 / 0</div><button class="btn sec" onclick="renderMatch()">Перемешать</button></div></div>
+<div class="sec" id="fix"><div class="card"><h2>Ошибки</h2><div id="eList"></div><div class="score" id="eScore">0 / 0</div><button class="btn sec" onclick="renderE()">Сбросить</button></div></div>
 <div class="sec" id="mix"><div class="card"><h2>Микс</h2><div id="xList"></div><div class="score" id="xScore">0 / 0</div><button class="btn sec" onclick="renderX()">Сбросить</button></div></div>
-
 <script>
-const C=[{q:"The keys are ___ the table.",o:["on","in","at","under"],a:0,c:"на поверхности → on"},{q:"She is ___ the kitchen.",o:["in","on","at","by"],a:0,c:"внутри комнаты → in"},{q:"I’ll meet you ___ the station.",o:["at","in","on","to"],a:0,c:"точка → at"},{q:"There is a picture ___ the wall.",o:["on","in","at","over"],a:0,c:"on the wall"},{q:"He lives ___ London.",o:["in","at","on","to"],a:0,c:"город → in"},{q:"The cat is ___ the sofa.",o:["under","on","in","at"],a:0,c:"под → under"},{q:"The shop is ___ the bank and the café.",o:["between","among","next to","opposite"],a:0,c:"between"},{q:"She sat ___ me.",o:["next to","between","among","opposite"],a:0,c:"next to"},{q:"There is a park ___ the house.",o:["behind","in front of","under","among"],a:0,c:"behind"},{q:"The bank is ___ the post office.",o:["opposite","behind","under","among"],a:0,c:"opposite"},{q:"Wait for me ___ the door.",o:["at","in","on","under"],a:0,c:"at the door"},{q:"We live ___ the second floor.",o:["on","in","at","to"],a:0,c:"on the floor"},{q:"The children are ___ the garden.",o:["in","on","at","by"],a:0,c:"in"},{q:"There is a bridge ___ the river.",o:["over","under","in","among"],a:0,c:"over"},{q:"I found my phone ___ the bag.",o:["in","on","at","under"],a:0,c:"in"},{q:"He is standing ___ the queue.",o:["in","on","at","between"],a:0,c:"in the queue"},{q:"Put the lamp ___ the corner of the room.",o:["in","at","on","by"],a:0,c:"in the corner"},{q:"The hotel is ___ the corner of the street.",o:["at","in","on","by"],a:0,c:"at the corner"},{q:"She is ___ home now.",o:["at","in","on","to"],a:0,c:"at home"},{q:"There are many trees ___ the forest.",o:["among","between","next to","opposite"],a:0,c:"among"}];
-(function(){C.forEach(x=>{const c=x.o[x.a];const o=x.o.slice();for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}x.o=o;x.a=o.indexOf(c)})})();
+const C=[{q:"The keys are ___ the table.",o:["on","in","at","under"],a:0,c:"on"},{q:"She is ___ the kitchen.",o:["in","on","at","by"],a:0,c:"in"},{q:"I’ll meet you ___ the station.",o:["at","in","on","to"],a:0,c:"at"},{q:"There is a picture ___ the wall.",o:["on","in","at","over"],a:0,c:"on"},{q:"He lives ___ London.",o:["in","at","on","to"],a:0,c:"in"},{q:"The cat is ___ the sofa.",o:["under","on","in","at"],a:0,c:"under"},{q:"The shop is ___ the bank and the café.",o:["between","among","next to","opposite"],a:0,c:"between"},{q:"She sat ___ me.",o:["next to","between","among","opposite"],a:0,c:"next to"},{q:"There is a park ___ the house.",o:["behind","in front of","under","among"],a:0,c:"behind"},{q:"The bank is ___ the post office.",o:["opposite","behind","under","among"],a:0,c:"opposite"},{q:"Wait ___ the door.",o:["at","in","on","under"],a:0,c:"at"},{q:"We live ___ the second floor.",o:["on","in","at","to"],a:0,c:"on"},{q:"Kids are ___ the garden.",o:["in","on","at","by"],a:0,c:"in"},{q:"A bridge ___ the river.",o:["over","under","in","among"],a:0,c:"over"},{q:"Phone ___ the bag.",o:["in","on","at","under"],a:0,c:"in"},{q:"___ the queue.",o:["in","on","at","between"],a:0,c:"in"},{q:"Lamp ___ the corner of the room.",o:["in","at","on","by"],a:0,c:"in the corner"},{q:"Hotel ___ the corner of the street.",o:["at","in","on","by"],a:0,c:"at the corner"},{q:"She is ___ home.",o:["at","in","on","to"],a:0,c:"at home"},{q:"Trees ___ the forest.",o:["among","between","next to","opposite"],a:0,c:"among"}];
+(function(){C.forEach(x=>{const c=x.o[x.a],o=x.o.slice();for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}x.o=o;x.a=o.indexOf(c)})})();
 let cd=0,cc=0;
 function renderC(){cd=0;cc=0;document.getElementById("cList").innerHTML=C.map((x,i)=>`<div style="margin-bottom:13px"><div class="q">${i+1}. ${x.q}</div><div class="opts">${x.o.map((o,j)=>`<button type="button" class="opt" onclick="ansC(${i},${j})">${o}</button>`).join("")}</div><div class="fb" id="cf${i}"></div></div>`).join("");document.getElementById("cScore").textContent="0 / 0"}
-function ansC(i,j){const x=C[i],bt=document.querySelectorAll(`#cList > div:nth-child(${i+1}) .opt`);if(bt[0].classList.contains("dis"))return;bt.forEach(b=>b.classList.add("dis"));cd++;const f=document.getElementById("cf"+i);if(j===x.a){bt[j].classList.add("ok");cc++;f.className="fb ok";f.textContent="✓ "+x.c}else{bt[j].classList.add("bad");bt[x.a].classList.add("ok");f.className="fb bad";f.textContent="✗ "+x.c}document.getElementById("cScore").textContent=cc+" / "+cd}
-
-const F=[{q:"The book is ___ the shelf.",a:"on",c:"на поверхности"},{q:"She works ___ an office.",a:"in",c:"внутри"},{q:"Let’s meet ___ the bus stop.",a:"at",c:"точка"},{q:"The dog is sleeping ___ the table.",a:"under",c:"под"},{q:"Sit ___ me, please.",a:"next to",c:"рядом"},{q:"The school is ___ the hospital and the library.",a:"between",c:"between"},{q:"He is standing ___ the car.",a:"in front of",c:"перед"},{q:"Don’t hide ___ the door!",a:"behind",c:"за"},{q:"The café is ___ the cinema.",a:"opposite",c:"напротив"},{q:"I left my bag ___ the car.",a:"in",c:"in the car"},{q:"We live ___ the third floor.",a:"on",c:"on the floor"},{q:"She is ___ work until 6.",a:"at",c:"at work"},{q:"Put it ___ the box.",a:"in",c:"in"},{q:"There is a mirror ___ the wall.",a:"on",c:"on the wall"},{q:"A plane flew ___ the city.",a:"over",c:"over"},{q:"I saw him ___ the crowd.",a:"among",c:"among"}];
-function renderF(){document.getElementById("fList").innerHTML=F.map((x,i)=>`<div class="gap"><label>${i+1}. ${x.q}</label><br><input id="fi${i}" autocomplete="off" placeholder="предлог"><div class="fb" id="ff${i}"></div></div>`).join("");document.getElementById("fScore").textContent="0 / 0"}
-function checkF(){let c=0;F.forEach((x,i)=>{const v=(document.getElementById("fi"+i).value||"").trim().toLowerCase().replace(/\s+/g," ");const f=document.getElementById("ff"+i);if(v===x.a){document.getElementById("fi"+i).className="ok";f.className="fb ok";f.textContent="✓ "+x.c;c++}else{document.getElementById("fi"+i).className="bad";f.className="fb bad";f.textContent="✗ «"+x.a+"». "+x.c}});document.getElementById("fScore").textContent=c+" / "+F.length}
-
-const pairs=[{l:"in the box",r:"внутри"},{l:"on the table",r:"на поверхности"},{l:"at the station",r:"в точке"},{l:"under the bed",r:"под"},{l:"above the sofa",r:"над"},{l:"next to the window",r:"рядом"},{l:"between A and B",r:"между двумя"},{l:"among the trees",r:"среди многих"},{l:"in front of the house",r:"перед"},{l:"behind the door",r:"позади"},{l:"opposite the bank",r:"напротив"},{l:"at home",r:"дома"},{l:"on the second floor",r:"на этаже"},{l:"in the corner",r:"в углу комнаты"},{l:"at the corner",r:"на углу улицы"},{l:"over the river",r:"над / через"}];
+function ansC(i,j){const x=C[i],bt=document.querySelectorAll(`#cList > div:nth-child(${i+1}) .opt`);if(bt[0].classList.contains("dis"))return;bt.forEach(b=>b.classList.add("dis"));cd++;const f=document.getElementById("cf"+i);if(j===x.a){bt[j].classList.add("ok");cc++;f.className="fb ok";f.textContent="✓ "+x.c}else{bt[j].classList.add("bad");bt[x.a].classList.add("ok");f.className="fb bad";f.textContent="✗ "+x.c}document.getElementById("cScore").textContent=cc+" / "+cd;if(cd>=C.length)recordAttempt("Выбор",cc,C.length)}
+const F=[{q:"The book is ___ the shelf.",a:"on"},{q:"She works ___ an office.",a:"in"},{q:"Meet ___ the bus stop.",a:"at"},{q:"Dog ___ the table.",a:"under"},{q:"Sit ___ me.",a:"next to"},{q:"School ___ the hospital and the library.",a:"between"},{q:"Standing ___ the car.",a:"in front of"},{q:"Hide ___ the door.",a:"behind"},{q:"Café ___ the cinema.",a:"opposite"},{q:"Bag ___ the car.",a:"in"},{q:"___ the third floor.",a:"on"},{q:"___ work until 6.",a:"at"},{q:"Put it ___ the box.",a:"in"},{q:"Mirror ___ the wall.",a:"on"},{q:"Plane ___ the city.",a:"over"},{q:"___ the crowd.",a:"among"}];
+function renderF(){document.getElementById("fList").innerHTML=F.map((x,i)=>`<div class="gap"><label>${i+1}. ${x.q}</label><br><input id="fi${i}" autocomplete="off"><div class="fb" id="ff${i}"></div></div>`).join("");document.getElementById("fScore").textContent="0 / 0"}
+function checkF(){let c=0;F.forEach((x,i)=>{const v=(document.getElementById("fi"+i).value||"").trim().toLowerCase();const f=document.getElementById("ff"+i);if(v===x.a){document.getElementById("fi"+i).className="ok";f.className="fb ok";f.textContent="✓";c++}else{document.getElementById("fi"+i).className="bad";f.className="fb bad";f.textContent="✗ "+x.a}});document.getElementById("fScore").textContent=c+" / "+F.length;recordAttempt("Пропуски",c,F.length)}
+const pairs=[{l:"in the box",r:"внутри"},{l:"on the table",r:"на поверхности"},{l:"at the station",r:"в точке"},{l:"under the bed",r:"под"},{l:"next to the window",r:"рядом"},{l:"between A and B",r:"между двумя"},{l:"among the trees",r:"среди многих"},{l:"in front of the house",r:"перед"},{l:"behind the door",r:"позади"},{l:"opposite the bank",r:"напротив"},{l:"at home",r:"дома"},{l:"on the second floor",r:"на этаже"},{l:"in the corner",r:"в углу комнаты"},{l:"at the corner",r:"на углу улицы"},{l:"over the river",r:"над/через"},{l:"above the sofa",r:"выше"}];
 let mSel=null,mDone=0;
 function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
 function renderMatch(){mDone=0;mSel=null;const L=shuffle(pairs.map((p,i)=>({t:p.l,id:i})));const R=shuffle(pairs.map((p,i)=>({t:p.r,id:i})));document.getElementById("mLeft").innerHTML=L.map(p=>`<button type="button" class="mbtn" data-id="${p.id}" data-side="L" onclick="selM(this)">${p.t}</button>`).join("");document.getElementById("mRight").innerHTML=R.map(p=>`<button type="button" class="mbtn" data-id="${p.id}" data-side="R" onclick="selM(this)">${p.t}</button>`).join("");document.getElementById("mScore").textContent="0 / "+pairs.length}
-function selM(btn){if(btn.classList.contains("ok"))return;if(!mSel){document.querySelectorAll(".mbtn.sel").forEach(b=>b.classList.remove("sel"));btn.classList.add("sel");mSel=btn;return}if(mSel===btn){btn.classList.remove("sel");mSel=null;return}if(mSel.dataset.side===btn.dataset.side){mSel.classList.remove("sel");btn.classList.add("sel");mSel=btn;return}if(mSel.dataset.id===btn.dataset.id){mSel.classList.remove("sel");mSel.classList.add("ok");btn.classList.add("ok");mSel=null;mDone++;document.getElementById("mScore").textContent=mDone+" / "+pairs.length}else{mSel.classList.add("bad");btn.classList.add("bad");const a=mSel;setTimeout(()=>{a.classList.remove("bad","sel");btn.classList.remove("bad")},450);mSel=null}}
-
-const E=[{q:"Книга на столе.",o:["The book is on the table.","The book is in the table.","The book is at the table."],a:0,c:"on"},{q:"Она в кухне.",o:["She is in the kitchen.","She is on the kitchen.","She is at the kitchen."],a:0,c:"in"},{q:"Встретимся на вокзале.",o:["Let’s meet at the station.","Let’s meet in the station.","Let’s meet on the station."],a:0,c:"at"},{q:"Картина на стене.",o:["The picture is on the wall.","The picture is in the wall.","The picture is at the wall."],a:0,c:"on"},{q:"Он живёт в Париже.",o:["He lives in Paris.","He lives at Paris.","He lives on Paris."],a:0,c:"in"},{q:"Кот под кроватью.",o:["The cat is under the bed.","The cat is below the bed.","The cat is on the bed."],a:0,c:"under"},{q:"Магазин между банком и кафе.",o:["The shop is between the bank and the café.","The shop is among the bank and the café.","The shop is next the bank and the café."],a:0,c:"between"},{q:"Она сидела рядом со мной.",o:["She sat next to me.","She sat next me.","She sat near to me."],a:0,c:"next to"},{q:"Банк напротив почты.",o:["The bank is opposite the post office.","The bank is in front the post office.","The bank is opposite of the post office."],a:0,c:"opposite"},{q:"Я дома.",o:["I am at home.","I am in home.","I am on home."],a:0,c:"at home"},{q:"Мы на втором этаже.",o:["We are on the second floor.","We are in the second floor.","We are at the second floor."],a:0,c:"on the floor"},{q:"Поставь лампу в угол комнаты.",o:["Put the lamp in the corner of the room.","Put the lamp at the corner of the room.","Put the lamp on the corner of the room."],a:0,c:"in the corner"}];
-(function(){E.forEach(x=>{const c=x.o[x.a];const o=x.o.slice();for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}x.o=o;x.a=o.indexOf(c)})})();
+function selM(btn){if(btn.classList.contains("ok"))return;if(!mSel){document.querySelectorAll(".mbtn.sel").forEach(b=>b.classList.remove("sel"));btn.classList.add("sel");mSel=btn;return}if(mSel===btn){btn.classList.remove("sel");mSel=null;return}if(mSel.dataset.side===btn.dataset.side){mSel.classList.remove("sel");btn.classList.add("sel");mSel=btn;return}if(mSel.dataset.id===btn.dataset.id){mSel.classList.remove("sel");mSel.classList.add("ok");btn.classList.add("ok");mSel=null;mDone++;document.getElementById("mScore").textContent=mDone+" / "+pairs.length;if(mDone>=pairs.length)recordAttempt("Соедини",mDone,pairs.length)}else{mSel.classList.add("bad");btn.classList.add("bad");const a=mSel;setTimeout(()=>{a.classList.remove("bad","sel");btn.classList.remove("bad")},450);mSel=null}}
+const E=[{q:"Книга на столе.",o:["The book is on the table.","The book is in the table.","The book is at the table."],a:0,c:"on"},{q:"Она в кухне.",o:["She is in the kitchen.","She is on the kitchen.","She is at the kitchen."],a:0,c:"in"},{q:"На вокзале.",o:["at the station","in the station","on the station"],a:0,c:"at"},{q:"На стене.",o:["on the wall","in the wall","at the wall"],a:0,c:"on"},{q:"В Париже.",o:["in Paris","at Paris","on Paris"],a:0,c:"in"},{q:"Под кроватью.",o:["under the bed","below the bed","on the bed"],a:0,c:"under"},{q:"Между банком и кафе.",o:["between the bank and the café","among the bank and the café","next the bank"],a:0,c:"between"},{q:"Рядом со мной.",o:["next to me","next me","near to me"],a:0,c:"next to"},{q:"Напротив почты.",o:["opposite the post office","in front the post office","opposite of the post office"],a:0,c:"opposite"},{q:"Дома.",o:["at home","in home","on home"],a:0,c:"at home"},{q:"На 2 этаже.",o:["on the second floor","in the second floor","at the second floor"],a:0,c:"on"},{q:"В углу комнаты.",o:["in the corner of the room","at the corner of the room","on the corner of the room"],a:0,c:"in the corner"}];
+(function(){E.forEach(x=>{const c=x.o[x.a],o=x.o.slice();for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}x.o=o;x.a=o.indexOf(c)})})();
 let ed=0,ec=0;
 function renderE(){ed=0;ec=0;document.getElementById("eList").innerHTML=E.map((x,i)=>`<div style="margin-bottom:13px"><div class="q">${i+1}. ${x.q}</div><div class="opts">${x.o.map((o,j)=>`<button type="button" class="opt" onclick="ansE(${i},${j})">${o}</button>`).join("")}</div><div class="fb" id="ef${i}"></div></div>`).join("");document.getElementById("eScore").textContent="0 / 0"}
-function ansE(i,j){const x=E[i],bt=document.querySelectorAll(`#eList > div:nth-child(${i+1}) .opt`);if(bt[0].classList.contains("dis"))return;bt.forEach(b=>b.classList.add("dis"));ed++;const f=document.getElementById("ef"+i);if(j===x.a){bt[j].classList.add("ok");ec++;f.className="fb ok";f.textContent="✓ "+x.c}else{bt[j].classList.add("bad");bt[x.a].classList.add("ok");f.className="fb bad";f.textContent="✗ "+x.c}document.getElementById("eScore").textContent=ec+" / "+ed}
-
-const X=[{q:"The milk is ___ the fridge.",o:["in","on","at","under"],a:0,c:"in"},{q:"There is snow ___ the ground.",o:["on","in","at","over"],a:0,c:"on"},{q:"Someone is knocking ___ the door.",o:["at","on","in","to"],a:0,c:"at the door"},{q:"The pharmacy is ___ the supermarket.",o:["next to","between","among","in"],a:0,c:"next to"},{q:"Don’t stand ___ me — I can’t see!",o:["in front of","behind","opposite","among"],a:0,c:"in front of"},{q:"He hid ___ the curtains.",o:["behind","in front of","opposite","between"],a:0,c:"behind"},{q:"The river runs ___ the city.",o:["through","over","under","among"],a:0,c:"through"},{q:"She sat ___ her two friends.",o:["between","among","next","opposite"],a:0,c:"between"},{q:"There was a path ___ the trees.",o:["among","between","next to","opposite"],a:0,c:"among"},{q:"The office is ___ the fifth floor.",o:["on","in","at","to"],a:0,c:"on"},{q:"I’ll be ___ the airport at 8.",o:["at","in","on","to"],a:0,c:"at"},{q:"A bird flew ___ the trees.",o:["over","under","in","among"],a:0,c:"over"}];
-(function(){X.forEach(x=>{const c=x.o[x.a];const o=x.o.slice();for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}x.o=o;x.a=o.indexOf(c)})})();
+function ansE(i,j){const x=E[i],bt=document.querySelectorAll(`#eList > div:nth-child(${i+1}) .opt`);if(bt[0].classList.contains("dis"))return;bt.forEach(b=>b.classList.add("dis"));ed++;const f=document.getElementById("ef"+i);if(j===x.a){bt[j].classList.add("ok");ec++;f.className="fb ok";f.textContent="✓ "+x.c}else{bt[j].classList.add("bad");bt[x.a].classList.add("ok");f.className="fb bad";f.textContent="✗ "+x.c}document.getElementById("eScore").textContent=ec+" / "+ed;if(ed>=E.length)recordAttempt("Ошибки",ec,E.length)}
+const X=[{q:"Milk ___ the fridge.",o:["in","on","at","under"],a:0,c:"in"},{q:"Snow ___ the ground.",o:["on","in","at","over"],a:0,c:"on"},{q:"Knocking ___ the door.",o:["at","on","in","to"],a:0,c:"at"},{q:"Pharmacy ___ the supermarket.",o:["next to","between","among","in"],a:0,c:"next to"},{q:"Don’t stand ___ me.",o:["in front of","behind","opposite","among"],a:0,c:"in front of"},{q:"Hid ___ the curtains.",o:["behind","in front of","opposite","between"],a:0,c:"behind"},{q:"River ___ the city.",o:["through","over","under","among"],a:0,c:"through"},{q:"Sat ___ her two friends.",o:["between","among","next","opposite"],a:0,c:"between"},{q:"Path ___ the trees.",o:["among","between","next to","opposite"],a:0,c:"among"},{q:"Office ___ the fifth floor.",o:["on","in","at","to"],a:0,c:"on"},{q:"___ the airport at 8.",o:["at","in","on","to"],a:0,c:"at"},{q:"Bird ___ the trees.",o:["over","under","in","among"],a:0,c:"over"}];
+(function(){X.forEach(x=>{const c=x.o[x.a],o=x.o.slice();for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}x.o=o;x.a=o.indexOf(c)})})();
 let xd=0,xc=0;
 function renderX(){xd=0;xc=0;document.getElementById("xList").innerHTML=X.map((x,i)=>`<div style="margin-bottom:13px"><div class="q">${i+1}. ${x.q}</div><div class="opts">${x.o.map((o,j)=>`<button type="button" class="opt" onclick="ansX(${i},${j})">${o}</button>`).join("")}</div><div class="fb" id="xf${i}"></div></div>`).join("");document.getElementById("xScore").textContent="0 / 0"}
-function ansX(i,j){const x=X[i],bt=document.querySelectorAll(`#xList > div:nth-child(${i+1}) .opt`);if(bt[0].classList.contains("dis"))return;bt.forEach(b=>b.classList.add("dis"));xd++;const f=document.getElementById("xf"+i);if(j===x.a){bt[j].classList.add("ok");xc++;f.className="fb ok";f.textContent="✓ "+x.c}else{bt[j].classList.add("bad");bt[x.a].classList.add("ok");f.className="fb bad";f.textContent="✗ "+x.c}document.getElementById("xScore").textContent=xc+" / "+xd}
-
+function ansX(i,j){const x=X[i],bt=document.querySelectorAll(`#xList > div:nth-child(${i+1}) .opt`);if(bt[0].classList.contains("dis"))return;bt.forEach(b=>b.classList.add("dis"));xd++;const f=document.getElementById("xf"+i);if(j===x.a){bt[j].classList.add("ok");xc++;f.className="fb ok";f.textContent="✓ "+x.c}else{bt[j].classList.add("bad");bt[x.a].classList.add("ok");f.className="fb bad";f.textContent="✗ "+x.c}document.getElementById("xScore").textContent=xc+" / "+xd;if(xd>=X.length)recordAttempt("Микс",xc,X.length)}
 function go(id){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.t===id));document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("active",s.id===id))}
-renderC();renderF();renderMatch();renderE();renderX();
+const STORE_KEY="place_prepositions_progress";
+function loadStore(){try{return JSON.parse(localStorage.getItem(STORE_KEY)||'{"attempts":[],"best":{}}')}catch(e){return{attempts:[],best:{}}}}
+function saveStore(d){localStorage.setItem(STORE_KEY,JSON.stringify(d));updateProgUI()}
+function updateProgUI(){const d=loadStore(),el=document.getElementById("progSummary");if(!el)return;if(!d.attempts.length){el.textContent="ещё нет попыток";return}const last=d.attempts[d.attempts.length-1];const best=Object.keys(d.best||{}).map(k=>k+": "+d.best[k]);el.textContent="последняя: "+last.date+" · "+last.summary+(best.length?" | лучшие: "+best.join(", "):"")}
+function recordAttempt(section,correct,total){if(!total)return;const d=loadStore();const pct=Math.round(100*correct/total);const date=new Date().toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});d.attempts.push({date,section,correct,total,pct,summary:section+" "+correct+"/"+total+" ("+pct+"%)"});if(d.attempts.length>50)d.attempts=d.attempts.slice(-50);if(!d.best)d.best={};const prev=d.best[section];if(prev==null||pct>=parseInt(String(prev),10))d.best[section]=pct+"% ("+correct+"/"+total+")";saveStore(d)}
+function showHistory(){const box=document.getElementById("histBox"),list=document.getElementById("histList");if(!box)return;const open=box.style.display==="block";box.style.display=open?"none":"block";if(open)return;const d=loadStore();list.innerHTML=d.attempts.length?d.attempts.slice().reverse().map(a=>"<div style='padding:6px 0;border-bottom:1px solid var(--b)'>"+a.date+" — <b>"+a.summary+"</b></div>").join(""):"<p style='color:var(--m)'>Пока пусто — пройди блок до конца</p>"}
+function resetProgress(){if(!confirm("Сбросить прогресс?"))return;localStorage.removeItem(STORE_KEY);updateProgUI();const box=document.getElementById("histBox");if(box)box.style.display="none"}
+renderC();renderF();renderMatch();renderE();renderX();updateProgUI();
 </script>
 </body>
 </html>
